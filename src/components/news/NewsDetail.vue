@@ -25,6 +25,16 @@
                 </div>
             </div>
             <div class="article__content" id="article">
+              <div v-if="news_details.has_video">
+                <!-- <p><br></p> -->
+                <div class="tt-video-box" v-bind:tt-video-id="news_details.video_id"
+                v-bind:tt-poster="news_details.poster_url">
+                  <video v-bind:src="decode_video_url" v-bind:poster="news_details.poster_url" 
+                  controls="" width="640" height="320" preload="true" webkit-playsinline="webkit-playsinline" 
+                  playsinline="playsinline" id="tt-video" class="tt-video">
+                  </video>
+                </div>
+              </div>
               <div v-html="news_details.content">
                 {{news_details.content}}
               </div>
@@ -43,11 +53,13 @@ import { Toast } from "mint-ui";
 export default {
   data() {
     return {
-        news_details: {}
+        news_details: {},
+        encode_video_url: ""  ,
+        decode_video_url: ""     
     };
   },
   created(){
-      this.getNewsdetail();
+    this.getNewsdetail();
   },
   mounted(){
     mui(".mui-scroll-wrapper").scroll({
@@ -62,12 +74,17 @@ export default {
         category = this.$route.query.category;
         tag_id = this.$route.query.tag_id;
       this.$http.get("news_details/", {params:{'category':category, "tag_id":tag_id}}).then(result => {
-       console.log(result)
+      //  console.log(result)
         this.news_details = result.body.news;
-    });
+        this.encode_video_url = this.news_details.encode_video_url;
+        console.log(this.encode_video_url);
+        this.$http.jsonp(this.encode_video_url).then(result=>{
+        this.decode_video_url = atob(result.body.data.video_list.video_1.backup_url_1);
+        });
+       
+      });
     },
    
-
 
   },
 };
@@ -217,6 +234,23 @@ div{
             border: none;
             outline: none;
             max-height: 100%;
+          }
+          .tt-video-box{
+            margin-top: 20px;
+            min-height: initial;
+            background: url(//s1.pstatp.com/growth/mobile_detail/image/xigua_loading.oPZoly1v.png) no-repeat center center;
+            background-size: 50%;
+            font-size: 0;
+            margin-right: auto;
+            margin-left: auto;
+            width: 100%;
+            height: 6.625rem;
+            .tt-video{
+              background-color: initial;
+              width: 100%;
+              height: 17.625rem;
+              object-fit: contain;
+            }
           }
         }
       }

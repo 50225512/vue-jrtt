@@ -36,6 +36,7 @@ Vue.http.options.root = 'http://122.51.194.132:8000'
 // Vue.http.options.root = 'http://127.0.0.1:8000'
 
 
+
 var vm = new Vue({
     el:'#app',
     render: c=> c(app),

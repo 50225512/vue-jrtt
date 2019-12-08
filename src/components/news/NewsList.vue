@@ -92,6 +92,12 @@ export default {
         if (result.status === 200) {
           // 手动拼接出一个最完整的 分类列表
           this.cates = result.body["category"];
+          for(i=0;i<this.cates.length;i++){
+            if(this.cates[i]=="推荐"){  
+              this.cates.splice(i, 1);            
+              this.cates.splice(0, 0, "推荐");
+            }
+          }
           console.log(result.body["category"])
           this.getNewsList("推荐");
         }
@@ -174,6 +180,12 @@ div{
     height: 0;
     line-height: 0;
     clear: both;
+}
+
+.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+    color: #D43D3D;
+    border-bottom: 0;
+    background: 0 0;
 }
 
 content.feed-list-container{
